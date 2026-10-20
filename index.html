@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retenção no Primeiro Contato | Método PAC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f0f4f8;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-soft: rgba(37, 99, 235, 0.1);
+      --pai: #d97706;
+      --pai-soft: rgba(217, 119, 6, 0.12);
+      --adulto: #059669;
+      --adulto-soft: rgba(5, 150, 105, 0.12);
+      --crianca: #db2777;
+      --crianca-soft: rgba(219, 39, 119, 0.12);
+      --danger: #dc2626;
+      --success: #16a34a;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
+    @keyframes slideInLeft { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.28); } 50% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); } }
+    @keyframes drawLine { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    @keyframes branchAppear { from { opacity: 0; transform: translateY(18px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes bubbleIn { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes linePulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 1.15rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      animation: fadeIn 0.5s ease;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: slideInLeft 0.5s ease;
+    }
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+    .logo span {
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    nav {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+      animation: slideInRight 0.5s ease;
+    }
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.25s ease;
+    }
+    nav a:hover, nav a.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.75rem 2rem 1.25rem;
+      text-align: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      animation: scaleIn 0.5s ease both;
+    }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.6rem, 3.8vw, 2.35rem);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      line-height: 1.25;
+      animation: fadeInUp 0.5s ease 0.08s both;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 560px;
+      margin: 0 auto;
+      animation: fadeInUp 0.5s ease 0.16s both;
+    }
+
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 2rem;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: all 0.5s ease;
+    }
+    .section-title.visible { opacity: 1; transform: translateY(0); }
+    .section-sub {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-size: 0.92rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease 0.06s;
+    }
+    .section-sub.visible { opacity: 1; transform: translateY(0); }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .intro-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.45s ease;
+    }
+    .intro-card.visible { opacity: 1; transform: translateY(0); }
+    .intro-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      color: var(--accent);
+    }
+    .intro-card p { font-size: 0.86rem; color: var(--text-muted); }
+    .intro-num {
+      display: inline-flex;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.55rem;
+    }
+
+    .niveis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.9rem;
+    }
+    .nivel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.15rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: all 0.4s ease;
+    }
+    .nivel.visible { opacity: 1; transform: translateY(0); }
+    .nivel-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+    .nivel h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 0.55rem;
+    }
+    .nivel ul {
+      margin-left: 1rem;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+    .nivel li { margin-bottom: 0.25rem; }
+
+    .metodo-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+    }
+    .step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.1rem;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: all 0.4s ease;
+    }
+    .step.visible { opacity: 1; transform: translateY(0); }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.55rem;
+    }
+    .step h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.92rem;
+      margin-bottom: 0.3rem;
+    }
+    .step p { font-size: 0.8rem; color: var(--text-muted); }
+
+    .camadas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.85rem;
+    }
+    .camada {
+      background: var(--bg-card);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      padding: 1rem 1.1rem;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 0.4s ease;
+    }
+    .camada.visible { opacity: 1; transform: translateY(0); }
+    .camada h4 { font-size: 0.88rem; margin-bottom: 0.3rem; }
+    .camada p { font-size: 0.82rem; color: var(--text-muted); }
+
+    .compare {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .compare-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: all 0.4s ease;
+    }
+    .compare-box.visible { opacity: 1; transform: translateY(0); }
+    .compare-box.bad { border-top: 3px solid var(--danger); }
+    .compare-box.good { border-top: 3px solid var(--success); }
+    .compare-box h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      margin-bottom: 0.65rem;
+    }
+    .compare-box.bad h3 { color: var(--danger); }
+    .compare-box.good h3 { color: var(--success); }
+    .compare-box ul {
+      margin-left: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .compare-box li { margin-bottom: 0.3rem; }
+
+    .destaque {
+      background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.08));
+      border: 1px solid rgba(37,99,235,0.18);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.4rem;
+      margin: 1.25rem 0;
+      font-size: 0.95rem;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 0.45s ease;
+    }
+    .destaque.visible { opacity: 1; transform: translateY(0); }
+    .destaque strong { color: var(--accent); }
+
+    .ponte {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.6rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .ponte h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .ponte p { color: var(--text-muted); font-size: 0.92rem; max-width: 520px; margin: 0 auto; }
+
+    .mindmap-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.4rem;
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: all 0.55s ease;
+    }
+    .mindmap-container.visible { opacity: 1; transform: translateY(0); }
+    .mindmap { display: flex; flex-direction: column; align-items: center; min-width: 620px; }
+    .mindmap-center {
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      color: #fff;
+      padding: 0.9rem 1.6rem;
+      border-radius: 999px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.28);
+      animation: pulseGlow 2.8s ease-in-out infinite;
+    }
+    .mindmap-branches {
+      display: flex;
+      justify-content: center;
+      gap: 1.15rem;
+      width: 100%;
+      margin-top: 2rem;
+      position: relative;
+    }
+    .mindmap-branches::before {
+      content: '';
+      position: absolute;
+      top: -2rem;
+      left: 50%;
+      width: 2px;
+      height: 2rem;
+      background: var(--border);
+      transform-origin: top;
+      animation: drawLine 0.45s ease 0.3s both;
+    }
+    .branch {
+      flex: 1;
+      max-width: 250px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.05rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      opacity: 0;
+      animation: branchAppear 0.5s ease forwards;
+    }
+    .branch:nth-child(1) { animation-delay: 0.35s; }
+    .branch:nth-child(2) { animation-delay: 0.5s; }
+    .branch:nth-child(3) { animation-delay: 0.65s; }
+    .branch::before {
+      content: '';
+      position: absolute;
+      top: -1.05rem;
+      left: 50%;
+      width: 2px;
+      height: 1.05rem;
+      background: var(--border);
+      transform-origin: top;
+      animation: drawLine 0.3s ease 0.55s both;
+    }
+    .branch:hover { transform: translateY(-7px); box-shadow: 0 10px 24px rgba(0,0,0,0.1); }
+    .branch.pai { border-color: var(--pai); }
+    .branch.pai:hover { background: var(--pai-soft); }
+    .branch.adulto { border-color: var(--adulto); }
+    .branch.adulto:hover { background: var(--adulto-soft); }
+    .branch.crianca { border-color: var(--crianca); }
+    .branch.crianca:hover { background: var(--crianca-soft); }
+    .branch-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      margin-bottom: 0.55rem;
+    }
+    .branch.pai .branch-icon { background: var(--pai-soft); color: var(--pai); }
+    .branch.adulto .branch-icon { background: var(--adulto-soft); color: var(--adulto); }
+    .branch.crianca .branch-icon { background: var(--crianca-soft); color: var(--crianca); }
+    .branch h3 { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; margin-bottom: 0.25rem; }
+    .branch.pai h3 { color: var(--pai); }
+    .branch.adulto h3 { color: var(--adulto); }
+    .branch.crianca h3 { color: var(--crianca); }
+    .branch p { font-size: 0.78rem; color: var(--text-muted); }
+    .branch-tags { display: flex; flex-wrap: wrap; gap: 0.28rem; margin-top: 0.6rem; }
+    .tag { font-size: 0.66rem; padding: 0.15rem 0.45rem; border-radius: 999px; font-weight: 600; }
+    .tag.pai { background: var(--pai-soft); color: var(--pai); }
+    .tag.adulto { background: var(--adulto-soft); color: var(--adulto); }
+    .tag.crianca { background: var(--crianca-soft); color: var(--crianca); }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    .card.visible { opacity: 1; transform: translateY(0); }
+    .card:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+    .card-header {
+      padding: 1rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .card-header:hover { background: rgba(0,0,0,0.015); }
+    .card-header .icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      flex-shrink: 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.7rem;
+      transition: transform 0.25s ease;
+    }
+    .card.open .card-header .icon,
+    .card-header:hover .icon { transform: scale(1.06); }
+    .card.pai .icon { background: var(--pai-soft); color: var(--pai); }
+    .card.adulto .icon { background: var(--adulto-soft); color: var(--adulto); }
+    .card.crianca .icon { background: var(--crianca-soft); color: var(--crianca); }
+    .card-header h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; flex: 1; }
+    .card.pai h3 { color: var(--pai); }
+    .card.adulto h3 { color: var(--adulto); }
+    .card.crianca h3 { color: var(--crianca); }
+    .toggle-icon { font-size: 0.8rem; color: var(--text-muted); transition: transform 0.3s ease; }
+    .card.open .toggle-icon { transform: rotate(180deg); }
+    .card-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .card.open .card-body { max-height: 900px; }
+    .card-content { padding: 0 1.1rem 1.25rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+    .card-content h4 { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 0.8rem 0 0.35rem; }
+    .card-content h4:first-child { margin-top: 0; }
+    .card-content p, .card-content li { font-size: 0.88rem; color: var(--text); }
+    .card-content ul { margin-left: 1rem; margin-bottom: 0.35rem; }
+    .card-content li { margin-bottom: 0.25rem; }
+    .example-box { background: var(--bg); border-left: 3px solid var(--accent); padding: 0.7rem 0.9rem; border-radius: 0 10px 10px 0; margin-top: 0.55rem; font-size: 0.84rem; }
+
+    .trans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.15rem; }
+    .trans-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.3rem;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.4s ease;
+    }
+    .trans-card.visible { opacity: 1; transform: translateY(0); }
+    .trans-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .trans-card.bad { border-top: 3px solid var(--danger); }
+    .trans-card.good { border-top: 3px solid var(--success); }
+    .trans-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .trans-card.bad .trans-badge { background: rgba(220, 38, 38, 0.1); color: var(--danger); }
+    .trans-card.good .trans-badge { background: rgba(22, 163, 74, 0.1); color: var(--success); }
+    .trans-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: linePulse 1.5s ease infinite; }
+    .trans-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; margin-bottom: 0.45rem; }
+    .trans-card > p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.95rem; }
+    .flow { display: flex; align-items: center; justify-content: center; gap: 0.35rem; margin: 0.7rem 0 0.15rem; font-size: 0.72rem; font-weight: 600; }
+    .flow-chip { padding: 0.18rem 0.5rem; border-radius: 6px; font-size: 0.68rem; font-weight: 700; }
+    .flow-chip.pai { background: var(--pai-soft); color: var(--pai); }
+    .flow-chip.crianca { background: var(--crianca-soft); color: var(--crianca); }
+    .flow-arrow { color: var(--border); font-size: 0.85rem; }
+    .flow.crossed .flow-arrow { color: var(--danger); }
+    .flow.ok .flow-arrow { color: var(--success); }
+
+    .dialogue { background: var(--bg); border-radius: 12px; padding: 0.9rem; display: flex; flex-direction: column; gap: 0.65rem; }
+    .bubble { display: flex; flex-direction: column; gap: 0.2rem; max-width: 92%; animation: bubbleIn 0.4s ease both; }
+    .bubble.cliente { align-self: flex-start; }
+    .bubble.atendente { align-self: flex-end; }
+    .bubble-meta { display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; font-weight: 600; }
+    .bubble.cliente .bubble-meta { color: var(--pai); }
+    .bubble.atendente .bubble-meta { color: var(--accent); justify-content: flex-end; }
+    .avatar { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.58rem; font-weight: 700; color: #fff; }
+    .bubble.cliente .avatar { background: var(--pai); }
+    .bubble.atendente .avatar { background: var(--accent); }
+    .bubble-text { padding: 0.65rem 0.85rem; border-radius: 12px; font-size: 0.84rem; line-height: 1.45; }
+    .bubble.cliente .bubble-text { background: #fff; border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+    .bubble.atendente .bubble-text { background: var(--accent-soft); border: 1px solid rgba(37, 99, 235, 0.12); border-bottom-right-radius: 4px; }
+    .state-tag { display: inline-block; margin-top: 0.35rem; font-size: 0.66rem; font-weight: 600; padding: 0.12rem 0.4rem; border-radius: 5px; background: rgba(0,0,0,0.05); color: var(--text-muted); }
+    .result-bar { margin-top: 0.9rem; padding: 0.7rem 0.85rem; border-radius: 10px; font-size: 0.84rem; font-weight: 500; display: flex; gap: 0.5rem; align-items: flex-start; }
+    .result-bar.danger { background: rgba(220, 38, 38, 0.08); color: var(--danger); border: 1px solid rgba(220, 38, 38, 0.12); }
+    .result-bar.warn { background: rgba(217, 119, 6, 0.08); color: #b45309; border: 1px solid rgba(217, 119, 6, 0.12); }
+    .result-bar .label { font-weight: 700; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.03em; min-width: 55px; opacity: 0.85; }
+
+    .strategy-wrapper { opacity: 0; transform: translateY(14px); transition: all 0.5s ease; }
+    .strategy-wrapper.visible { opacity: 1; transform: translateY(0); }
+    .strategy-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .strategy-table th { background: var(--bg); padding: 0.85rem 1.05rem; text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 600; }
+    .strategy-table td { padding: 0.95rem 1.05rem; border-top: 1px solid var(--border); font-size: 0.88rem; vertical-align: top; }
+    .strategy-table tbody tr:hover td { background: var(--bg-card-hover); }
+    .strategy-table .estado { font-weight: 600; }
+    .strategy-table .acao { color: var(--adulto); font-weight: 500; }
+    .strategy-table .exemplo { font-style: italic; color: var(--text-muted); font-size: 0.84rem; }
+
+    .benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .benefit { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.3rem; text-align: center; transition: all 0.3s ease; opacity: 0; transform: translateY(14px); }
+    .benefit.visible { opacity: 1; transform: translateY(0); }
+    .benefit:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow); }
+    .benefit .icon { width: 44px; height: 44px; margin: 0 auto 0.65rem; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: var(--accent-soft); color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.8rem; }
+    .benefit h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; margin-bottom: 0.35rem; }
+    .benefit p { font-size: 0.86rem; color: var(--text-muted); }
+
+    .avaliacao { max-width: 1100px; margin: 0 auto; padding: 2rem 2rem 3rem; }
+    .avaliacao-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2rem 1.75rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; opacity: 0; transform: translateY(16px); transition: all 0.5s ease; }
+    .avaliacao-card.visible { opacity: 1; transform: translateY(0); }
+    .avaliacao-left, .avaliacao-right { text-align: center; }
+    .avaliacao-avatar { width: 110px; height: auto; border-radius: 14px; margin: 0 auto 0.75rem; display: block; box-shadow: 0 6px 18px rgba(0,0,0,0.1); }
+    .avaliacao-qr { width: 180px; height: 180px; margin: 0 auto; border-radius: 12px; border: 1px solid var(--border); display: block; background: #fff; object-fit: contain; padding: 8px; }
+    .avaliacao-hint { margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted); }
+
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 1.25rem; }
+
+    @media (max-width: 700px) {
+      .mindmap-branches { flex-direction: column; align-items: center; gap: 1.2rem; }
+      .branch { max-width: 100%; width: 100%; }
+      .mindmap { min-width: unset; }
+      header { padding: 0.9rem 1rem; }
+      section { padding: 1.6rem 1rem; }
+      .hero { padding: 2rem 1rem 1rem; }
+      .avaliacao-card { grid-template-columns: 1fr; gap: 1.5rem; }
+      .avaliacao-avatar { width: 100px; }
+      .avaliacao-qr { width: 160px; height: 160px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-mark">PAC</div>
+        <span>Retenção + PAC</span>
+      </div>
+      <nav>
+        <a href="#inicio" class="active">Início</a>
+        <a href="#metodo">Método</a>
+        <a href="#mapa">PAC</a>
+        <a href="#estados">Estados</a>
+        <a href="#transacoes">Transações</a>
+        <a href="#estrategia">Estratégia</a>
+        <a href="#avaliacao">Avaliação</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="badge">Treinamento de Retenção</div>
+    <h1>Retenção no<br><span>primeiro contato</span></h1>
+    <p>Cada interação constrói permanência. Para reter de verdade, alinhe a técnica com a empatia — e use o método PAC da psicologia comportamental.</p>
+  </div>
+
+  <section id="inicio">
+    <h2 class="section-title">Tudo é relevante</h2>
+    <p class="section-sub">Retenção não nasce só na palavra “cancelar”. Ela é construída antes, nos detalhes.</p>
+    <div class="intro-grid">
+      <div class="intro-card"><div class="intro-num">1</div><h3>Troca de senha</h3><p>Simples tecnicamente. Fundamental na experiência e na empatia.</p></div>
+      <div class="intro-card"><div class="intro-num">2</div><h3>Wi-Fi e cobertura</h3><p>Orientação clara evita frustração, lentidão percebida e retorno.</p></div>
+      <div class="intro-card"><div class="intro-num">3</div><h3>Serviços de terceiros</h3><p>Mesmo fora do escopo, conduza com clareza e sem abandono.</p></div>
+      <div class="intro-card"><div class="intro-num">4</div><h3>Recorrência</h3><p>Histórico e postura valem tanto quanto o teste técnico.</p></div>
+      <div class="intro-card"><div class="intro-num">5</div><h3>Risco de saída</h3><p>Não deve ser o primeiro momento em que o cliente se sente valorizado.</p></div>
+    </div>
+    <div class="destaque">O cliente precisa perceber valor <strong>antes</strong> de cogitar cancelar — em cada orientação, em cada palavra.</div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Três níveis, uma experiência</h2>
+    <p class="section-sub">Para o cliente não existem departamentos. Existe a empresa resolvendo o problema.</p>
+    <div class="niveis">
+      <div class="nivel">
+        <div class="nivel-tag">N1 · Primeiro contato</div>
+        <h3>Acolhe e resolve</h3>
+        <ul><li>Tom receptivo e seguro</li><li>Perguntas investigativas</li><li>Resolução rápida quando possível</li><li>Histórico completo registrado</li></ul>
+      </div>
+      <div class="nivel">
+        <div class="nivel-tag">N2 · Aprofundamento</div>
+        <h3>Analisa e estabiliza</h3>
+        <ul><li>Análise técnica avançada</li><li>Ajustes e estabilização</li><li>Traduz o técnico para o cliente</li><li>Previne nova oscilação</li></ul>
+      </div>
+      <div class="nivel">
+        <div class="nivel-tag">N3 · Especializado</div>
+        <h3>Investiga e soluciona</h3>
+        <ul><li>Causa raiz e infraestrutura</li><li>Intervenção estrutural</li><li>Retorno técnico confiável</li><li>Garante longevidade da conexão</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="metodo">
+    <h2 class="section-title">Método: Ouvir → Investigar → Resolver → Reter</h2>
+    <p class="section-sub">Quatro movimentos para qualquer cenário — do chamado simples ao mais complexo.</p>
+    <div class="metodo-steps">
+      <div class="step"><div class="step-num">1</div><h3>Ouvir</h3><p>Acolha a fala, o tom e a emoção sem interromper cedo demais.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Investigar</h3><p>Vá além do sintoma. Consulte histórico e faça perguntas precisas.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Resolver</h3><p>Execute a solução e oriente de forma didática para evitar retorno.</p></div>
+      <div class="step"><div class="step-num">4</div><h3>Reter</h3><p>Deixe a sensação de segurança, valor e disponibilidade contínua.</p></div>
+    </div>
+    <div class="destaque">Retenção é consequência de uma experiência consistente — não de uma frase decorada no encerramento.</div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Escuta inteligente</h2>
+    <p class="section-sub">Escute para entender, não apenas para responder. Quatro camadas da conversa:</p>
+    <div class="camadas">
+      <div class="camada"><h4>1. Problema declarado</h4><p>O que o cliente diz na superfície: “caiu”, “está lenta”.</p></div>
+      <div class="camada"><h4>2. Problema real</h4><p>O impacto: home office parado, aula ao vivo, TV sem sinal.</p></div>
+      <div class="camada"><h4>3. Sinais de desgaste</h4><p>“De novo”, “já é a terceira vez”, “ninguém resolve”.</p></div>
+      <div class="camada"><h4>4. Risco de saída</h4><p>Quebra de confiança ou desamparo — priorize na hora.</p></div>
+    </div>
+  </section>
+
+  <section id="mapa">
+    <h2 class="section-title">Mapa Mental dos Estados de Ego</h2>
+    <p class="section-sub">Clique em cada estado para explorar os detalhes.</p>
+    <div class="mindmap-container">
+      <div class="mindmap">
+        <div class="mindmap-center">Estados de Ego (PAC)</div>
+        <div class="mindmap-branches">
+          <div class="branch pai" onclick="document.getElementById('card-pai').classList.add('open'); document.getElementById('card-pai').scrollIntoView({behavior:'smooth',block:'center'})">
+            <div class="branch-icon">PAI</div>
+            <h3>Pai</h3>
+            <p>Julgamento, normas e proteção</p>
+            <div class="branch-tags"><span class="tag pai">Crítico</span><span class="tag pai">Protetor</span></div>
+          </div>
+          <div class="branch adulto" onclick="document.getElementById('card-adulto').classList.add('open'); document.getElementById('card-adulto').scrollIntoView({behavior:'smooth',block:'center'})">
+            <div class="branch-icon">ADU</div>
+            <h3>Adulto</h3>
+            <p>Lógica, fatos e realidade</p>
+            <div class="branch-tags"><span class="tag adulto">Racional</span><span class="tag adulto">Ideal</span></div>
+          </div>
+          <div class="branch crianca" onclick="document.getElementById('card-crianca').classList.add('open'); document.getElementById('card-crianca').scrollIntoView({behavior:'smooth',block:'center'})">
+            <div class="branch-icon">CRI</div>
+            <h3>Criança</h3>
+            <p>Emoção, impulso e reação</p>
+            <div class="branch-tags"><span class="tag crianca">Livre</span><span class="tag crianca">Adaptada</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="estados">
+    <h2 class="section-title">Explicação dos Estados</h2>
+    <p class="section-sub">Clique no cabeçalho de cada card para expandir ou recolher.</p>
+    <div class="cards-grid">
+      <div class="card pai" id="card-pai">
+        <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+          <div class="icon">PAI</div>
+          <h3>Estado de Pai</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="card-content">
+            <p>Regras, conceitos e julgamentos aprendidos com figuras de autoridade na infância.</p>
+            <h4>Pai Crítico</h4>
+            <ul><li>Aponta falhas e impõe regras de forma ríspida</li><li>Cobra eficiência e julga o outro</li></ul>
+            <div class="example-box"><strong>Exemplo:</strong> “Isso é inaceitável! Vocês sempre erram comigo. Quero falar com o gerente agora.”</div>
+            <h4>Pai Protetor / Nutritivo</h4>
+            <ul><li>Acolhe, defende, orienta e ajuda</li><li>Transmite segurança e cuidado</li></ul>
+            <div class="example-box"><strong>Exemplo:</strong> “Entendo que o sistema falhou. Vou cuidar disso pessoalmente para você.”</div>
+          </div>
+        </div>
+      </div>
+      <div class="card adulto" id="card-adulto">
+        <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+          <div class="icon">ADU</div>
+          <h3>Estado de Adulto</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="card-content">
+            <p>Estado racional e objetivo. Avalia a realidade com dados do presente, sem excesso de emoção.</p>
+            <h4>Características</h4>
+            <ul><li>Foco em fatos, dados e soluções</li><li>Comunicação clara e profissional</li></ul>
+            <div class="example-box"><strong>Cliente:</strong> “Preciso cancelar o serviço X porque não o utilizo mais.”<br><br><strong>Atendente:</strong> “Perfeito. Para o cancelamento, preciso confirmar seu documento e o protocolo.”</div>
+          </div>
+        </div>
+      </div>
+      <div class="card crianca" id="card-crianca">
+        <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+          <div class="icon">CRI</div>
+          <h3>Estado de Criança</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="card-content">
+            <p>Reações emocionais e comportamentais da infância diante do mundo.</p>
+            <h4>Criança Livre</h4>
+            <ul><li>Espontânea, bem-humorada, entusiasmada</li></ul>
+            <div class="example-box"><strong>Exemplo:</strong> “Adorei o atendimento. Sempre resolvem com tranquilidade.”</div>
+            <h4>Criança Adaptada – Rebelde</h4>
+            <ul><li>Grita, ameaça ou age de forma irracional</li></ul>
+            <div class="example-box"><strong>Exemplo:</strong> “Vou postar isso em todas as redes. Vocês vão se arrepender.”</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="avaliacao" id="avaliacao">
+    <h2 class="section-title">Sua opinião importa</h2>
+    <p class="section-sub">Avalie este treinamento e ajude a melhorar a capacitação do time.</p>
+    <div class="avaliacao-card">
+      <div class="avaliacao-left">
+        <h3>Avalie o treinamento</h3>
+        <p>Aponte a câmera do celular para o QR Code e registre sua avaliação.</p>
+        <p class="avaliacao-hint">Material preparado pela equipe de Treinamento e Desenvolvimento Ateky.</p>
+      </div>
+      <div class="avaliacao-right">
+        <h3>Márcia</h3>
+        <p>Especialista e Treinamento<br>Como foi a experiência com este material?</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Treinamento de retenção no primeiro contato + método PAC.<br>
+    Material didático para equipes de suporte e atendimento.
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.section-title, .section-sub, .intro-card, .nivel, .step, .camada, .compare-box, .destaque, .mindmap-container, .card, .trans-card, .strategy-wrapper, .benefit, .avaliacao-card').forEach(el => observer.observe(el));
+    document.getElementById('card-pai').classList.add('open');
+  </script>
+</body>
+</html>
